@@ -163,6 +163,14 @@ option {
   clear: both;
 }
 
+/* 
+	Errors
+*/
+.error {
+	border-style: solid;
+  	border-color: red;
+}
+
 /* ================================= 
   Media Queries
 ==================================== */
