@@ -167,8 +167,9 @@ option {
 	Errors
 */
 .error {
-	border-style: solid;
-  	color: red;
+	
+	  color: red;
+	 
 }
 
 /* ================================= 

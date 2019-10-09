@@ -58,6 +58,7 @@ const activCheckboxes = $('.activities input');
 
 // Clicking on activities will disable competitive activities and add costs to Total Costs
 $('.activities').change(function(event){
+    $(".error").remove();
     const clicked = event.target;
     const clickedTime = $(clicked).attr('data-day-and-time');
 
@@ -117,10 +118,8 @@ $('#payment').change(function(event){
 });
 
 //Validation of inputs
-
 function errorMessage (section, message){
-    $(section).after('<span class="error">' + message + '</span>');
-    $(section).css('border-color', 'red');
+    $(section).after('<span class="error">' + message + '</span>');  
 }
 
 
