@@ -16,14 +16,13 @@ $('#title').change(function(){
 
 // T-shirt section
 
-//Adds feild “Please select a T-shirt theme”.
+//Add field “Please select a T-shirt theme”.
 $('#color').prepend('<option>Please select a T-shirt theme</option>');
 $('#color option').eq(1).attr('selected', true);
-$('#color option').eq(1).removeAttr('selected');
 
-//Disable other "Color" fields
+//Disable "Color" section
 $('#color').each(function(){
-    $('#color option').hide();
+    $('#colors-js-puns').hide();
 });
 
 //Displays the T-shirt color options that match
@@ -31,16 +30,19 @@ $('#color').each(function(){
 $('#design').change(function(event){
     $('#color').each(function(){       
         if ($(event.target).val() === "js puns"){
+            $('#colors-js-puns').show();
             $("#color option:contains('Please select')").hide();
             $("#color option:contains('I ♥ JS')").hide();     
             $("#color option:contains('JS Puns')").show(); 
         } else if ($(event.target).val() === "heart js"){
+            $('#color option').eq(4).attr('selected', true);
+            $('#colors-js-puns').show();
             $("#color option:contains('Please select')").hide();        
             $("#color option:contains('JS Puns')").hide();
             $("#color option:contains('I ♥ JS')").show();           
         }
         else {
-            $('#color option').hide();
+            $('#colors-js-puns').hide();
         }
     });
 });
@@ -169,6 +171,7 @@ $('form').submit(function(event) {
 });
 
 // E-mail address must be valid
+// Real-time Error Messages
 $('#mail').on('input', function(event) {
     const regEx = /^[^@]+@[^@.]+\.[a-z]+$/i;
     const validEmail = regEx.test($('#mail').val());
