@@ -92,8 +92,7 @@ $('.activities').change(function(event){
 
 //Payment section
 $('#payment option:contains("Select Payment Method")').prop('disabled', true);
-$('#payment option').eq(1).prop('selected', true);
-$('#payment option').eq(1).removeAttr('selected');
+$('#payment option:contains("Credit Card")').prop('selected', true);
 
 $('#paypal').hide();
 $('#bitcoin').hide();
@@ -119,87 +118,65 @@ $('#payment').change(function(event){
 
 //Validation of inputs
 
-$('form').submit(function(event) {
-    event.preventDefault();
-    const name = $('#name').val();
-    const mail = $('#mail').val();
-    const ccNum = $('#cc-num').val();
-    const ccZip = $('#zip').val();
-    const ccCvv = $('#cvv').val();
+function errorMessage (section, message){
+    $(section).after('<span class="error">' + message + '</span>');
+    $(section).css('border-color', 'red');
+}
 
+
+$('form').submit(function(event) {
+   event.preventDefault();
+   
    $(".error").remove();
 
     // Name field cannot  be blank
-   if (name.length < 1) {
-    $('#name').after('<span class="error">This field cannot be blank</span>');
+   if ($('#name').val().length < 1) {
+        errorMessage('#name', 'This field cannot be blank');
     }
 
     // E-mail field cannot  be blank
-    if (mail.length < 1) {
-        $('#mail').after('<span class="error">This field cannot be blank</span>');
-        } 
+    if ($('#mail').val().length < 1) {
+        errorMessage('#mail', 'This field cannot be blank');
+    } 
 
+    // At least one checkbox under the 
+    //"Register for Activities" should be checked
+    if ($('.activities input:checked').length === 0 ){
+        errorMessage('.activities', 'Select at least one activity');
+        }
+
+    // Validation section of credit card
+    if ($('#payment').val() === 'Credit Card'){
+        const regExccNum = /^\d{13,16}$/;
+        const validccNum = regExccNum.test($('#cc-num').val());
+        const regExzip = /^\d{5}$/;
+        const validZip = regExzip.test($('#zip').val());
+        const regExCvv = /^\d{3}$/;
+        const validCvv = regExCvv.test($('#cvv').val());
+
+        // Credit card number field should contain from 13 to 16 numbers
+        if (!validccNum) {
+            errorMessage('#cc-num', 'This field should contain between 13 and 16 digits');
+        }
+        // Credit card ZIP code field should contain 5 numbers
+         if (!validZip){
+            errorMessage('#zip','This field should contain 5 digits' );
+        }
+        // Credit card CVV code field should contain 3 numbers
+         if (!validCvv){
+            errorMessage('#cvv', 'This field should contain 3 digits');
+        }
+    }
 });
 
 // E-mail address must be valid
 $('#mail').on('input', function(event) {
     const regEx = /^[^@]+@[^@.]+\.[a-z]+$/i;
-    const validEmail = regEx.test(mail);
+    const validEmail = regEx.test($('#mail').val());
 
     $(".error").remove();
 
     if (!validEmail){
-        console.log(regEx);
         $('#mail').after('<span class="error">Enter a valid email</span>');
     } 
-
 });
-
-/*
-
-// Checks that name field is not blank
-$('#name').on("input", function (event){
-    
-    if ($(event.target).val() === ''){
-        $('#name').css('border-color', 'red');
-    }
-    else {
-        $('#name').css('border-color', "#5e97b0");
-    }
-});
-
-// Must be a valid email address
-function isValidEmail(email) {
-    return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
-    }
-
-function showOrHideTip(show, element) {
-  // show element when show is true, hide when false
-  if (show) {
-    element.style.display = "inherit";
-  } else {
-    element.style.display = "none";
-  }
-}
-
-function createListener(validator) {
-  return e => {
-    const text = e.target.value;
-    const valid = validator(text);
-    const showTip = text !== "" && !valid;
-    const tooltip = e.target.nextElementSibling;
-    tooltip.innerHTML = '<span>Must be a valid email address</span>';
-    showOrHideTip(showTip, tooltip);
-  };
-}    
-
-$('#mail').on("input", createListener(isValidEmail));
-
-// User must select at least one checkbox under the
-// "Register for Activities" section of the form.
-
-
-// User must supply a Credit Card number, a Zip Code, and 
-// a 3 number CVV value before the form can be submitted.
-
-*/
