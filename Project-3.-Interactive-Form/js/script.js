@@ -120,58 +120,123 @@ $('#payment').change(function(event){
 });
 
 //Validation of inputs
-function errorMessage (section, message){
-    $(section).after('<span class="error">' + message + '</span>');  
+
+//Types of messages
+const blankMessage = '<span class="error">This field cannot be blank</span>';
+const mailMessage = '<span class="error">Enter a valid e-mail address</span>';
+const activitiesMessage = '<span class="error">Select at least one activity</span>';
+const creditCardNumMessage = '<span class="error">This field should contain between 13 and 16 digits</span>';
+const creditCardZipMessage = '<span class="error">This field should contain 5 digits</span>';
+const creditCardCVVMessage = '<span class="error">This field should contain 3 digits</span>';
+
+// Error message 
+function errorMessage (section, message){  
+        $(section).after(message);  
 }
 
-
-$('form').submit(function(event) {
-   event.preventDefault();
-   
-   $(".error").remove();
-
+// Functions for validation
+function validName (){
     // Name field cannot  be blank
-   if ($('#name').val().length < 1) {
-        errorMessage('#name', 'This field cannot be blank');
+    if ($('#name').val().length < 1) {
+        return false; 
     }
+}
 
+function validEmail () {   
+    const regEx = /^[^@]+@[^@.]+\.[a-z]+$/i;
+    const validEmailVar = regEx.test($('#mail').val());
+    
     // E-mail field cannot  be blank
     if ($('#mail').val().length < 1) {
-        errorMessage('#mail', 'This field cannot be blank');
+        return 1;
     } 
+    // E-mail address must be valid
+    else if (!validEmailVar){
+        return 2;        
+    }
+}
 
+function validActivities () {
     // At least one checkbox under the 
     //"Register for Activities" should be checked
     if ($('.activities input:checked').length === 0 ){
-        errorMessage('.activities', 'Select at least one activity');
-        }
+        return false;
+    }
+}
 
-    // Validation section of credit card
+// Validation section of credit card
+function validCCNumber () {
+    // Credit card number field should contain from 13 to 16 numbers
+    const regExccNum = /^\d{13,16}$/;
+    const validccNum = regExccNum.test($('#cc-num').val());
+    if (!validccNum) {
+        return false;
+    }
+}
+
+function validCCZip () {
+    // Credit card ZIP code field should contain 5 numbers
+    const regExzip = /^\d{5}$/;
+    const validZip = regExzip.test($('#zip').val());
+    if (!validZip) {
+        return false;
+    }
+}
+
+function validCvv () {
+    // Credit card ZIP code field should contain 5 numbers
+    const regExCvv = /^\d{3}$/;
+    const validCvv = regExCvv.test($('#cvv').val());
+    if (!validCvv) {
+        return false;
+    }
+}
+
+// Validation on submit button
+$('form').submit(function(event) {
+   
+    $(".error").remove();
+
+    if (validName() === false){
+        event.preventDefault(); 
+        errorMessage('#name', blankMessage);
+    }
+
+    if (validEmail() === 1){
+        event.preventDefault();
+        errorMessage('#mail', blankMessage);       
+    } else if (validEmail() === 2){
+        event.preventDefault();
+        errorMessage('#mail', mailMessage); 
+    }
+
+    if (validActivities() === false){
+        event.preventDefault(); 
+        errorMessage('.activities', activitiesMessage);
+    }
+
+    // Validation of Credit Card fields only if Credit Card is chosen as payment method
     if ($('#payment').val() === 'Credit Card'){
-        const regExccNum = /^\d{13,16}$/;
-        const validccNum = regExccNum.test($('#cc-num').val());
-        const regExzip = /^\d{5}$/;
-        const validZip = regExzip.test($('#zip').val());
-        const regExCvv = /^\d{3}$/;
-        const validCvv = regExCvv.test($('#cvv').val());
 
-        // Credit card number field should contain from 13 to 16 numbers
-        if (!validccNum) {
-            errorMessage('#cc-num', 'This field should contain between 13 and 16 digits');
+        if (validCCNumber() === false){
+            event.preventDefault(); 
+            errorMessage('#cc-num', creditCardNumMessage);
         }
-        // Credit card ZIP code field should contain 5 numbers
-         if (!validZip){
-            errorMessage('#zip','This field should contain 5 digits' );
+
+        if (validCCZip() === false){
+            event.preventDefault(); 
+            errorMessage('#zip', creditCardZipMessage);
         }
-        // Credit card CVV code field should contain 3 numbers
-         if (!validCvv){
-            errorMessage('#cvv', 'This field should contain 3 digits');
+
+        if (validCvv() === false){
+            event.preventDefault();
+            errorMessage('#cvv', creditCardCVVMessage);
         }
     }
 });
 
 // E-mail address must be valid
-// Real-time Error Messages
+// This validation is separated, as example of Real-Time Error Message
 $('#mail').on('input', function(event) {
     const regEx = /^[^@]+@[^@.]+\.[a-z]+$/i;
     const validEmail = regEx.test($('#mail').val());
