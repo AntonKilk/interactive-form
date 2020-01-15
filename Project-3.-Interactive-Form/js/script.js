@@ -9,9 +9,9 @@ $('#title').change(function(){
 
      if ($('#title option:selected').text() === "Other"){
          $('#other-title').show();
-     }   else {
-                $('#other-title').hide();
-             }
+     }  else {
+            $('#other-title').hide();
+        }
 });
 
 // T-shirt section
@@ -136,10 +136,7 @@ function errorMessage (section, message){
 
 // Functions for validation
 function validName (){
-    // Name field cannot  be blank
-    if ($('#name').val().length < 1) {
-        return false; 
-    }
+         return ($('#name').val().length > 0);                 
 }
 
 function validEmail () {   
