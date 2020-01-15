@@ -1,6 +1,6 @@
 # Interactive Form
 
-## FSJS Techdegree Project 5 (teamtreehouse.com)
+## FSJS Techdegree Project 3 (teamtreehouse.com)
 
 ### Author: Anton Kilk
 
